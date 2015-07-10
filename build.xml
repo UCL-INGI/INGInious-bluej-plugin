@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_jar" name="INGInious plugin jar">
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.jarfile" value="C:/Users/Anthony/bluej/extensions"/>
+    <target name="create_jar">
+        <jar destfile="${dir.jarfile}/INGInious.jar">
+            <manifest>
+            	<attribute name="Class-Path" value="gson-2.3.1.jar"/>
+                <attribute name="Main-Class" value="inginious.plugin.INGInious"/>
+            </manifest>
+            <fileset dir="${dir.buildfile}/bin"/>
+        </jar>
+    </target>
+</project>
