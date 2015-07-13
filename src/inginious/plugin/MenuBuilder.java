@@ -18,6 +18,7 @@
 package inginious.plugin;
 
 import bluej.extensions.*;
+import inginious.api.API;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,6 +28,7 @@ import javax.swing.*;
 class MenuBuilder extends MenuGenerator {
 
     private BPackage aPackage;
+    private API api;
 
     public JMenuItem getToolsMenuItem(BPackage aPackage) {
         this.aPackage = aPackage;
@@ -34,6 +36,11 @@ class MenuBuilder extends MenuGenerator {
         JMenuItem menu = new JMenuItem("Submit on INGInious");
         menu.addActionListener(new SubmitListener());
         return menu;
+    }
+    
+    public MenuBuilder(API api) {
+        super();
+        this.api = api;
     }
 
     private class SubmitListener implements ActionListener {
@@ -44,7 +51,7 @@ class MenuBuilder extends MenuGenerator {
             boolean authenticated = false;
 
             try {
-                authenticated = INGInious.API.isAuthenticated();
+                authenticated = api.isAuthenticated();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Couldn't connect to API.\nCheck your connection settings", 
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -54,7 +61,7 @@ class MenuBuilder extends MenuGenerator {
             // Authenticate if needed
             try {
                 if(!authenticated)
-                    authenticated = new AuthenticationGUI().authenticate() == 1;
+                    authenticated = new AuthenticationGUI(api).authenticate() == 1;
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Unhandled error\n" + e.getClass().getName() + " : " + e.getMessage(), 
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -71,7 +78,7 @@ class MenuBuilder extends MenuGenerator {
             // Submit project
             // Currently, the plugin only supports submitting a zipfile of the project as a one-problem-task input
             try {
-                String subid = new SubmissionGUI().submitProject(aPackage.getProject());
+                String subid = new SubmissionGUI(api).submitProject(aPackage.getProject());
 
                 if(subid != null && !subid.equals(""))
                     JOptionPane.showMessageDialog(null, "Your project has been successfully submitted\nSubmission ID : " + subid);

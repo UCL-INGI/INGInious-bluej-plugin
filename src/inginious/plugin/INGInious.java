@@ -18,32 +18,29 @@
 package inginious.plugin;
 
 import bluej.extensions.*;
-import bluej.extensions.event.*;
 import inginious.api.*;
 
 import java.net.*;
 
 import javax.swing.JOptionPane;
 
-public class INGInious extends Extension implements PackageListener {
+public class INGInious extends Extension {
 
     private BlueJ bluej;
-    public static API API;
-    public static Course lastCourse;
-    public static Task lastTask;
+    private API api;
 
     public void startup (BlueJ bluej) {
 
         this.bluej = bluej;
+        
+        // Init api
+        this.api = new API(bluej.getExtensionPropertyString("url",""), 
+                bluej.getExtensionPropertyString("sessionid",""));
 
         // Register a generator for menu items
-        this.bluej.setMenuGenerator(new MenuBuilder());
-        this.bluej.setPreferenceGenerator(new PreferenceBuilder(bluej));
-        this.bluej.addPackageListener(this);
-
-        // Init api
-        INGInious.API = new API(bluej.getExtensionPropertyString("url",""), 
-                bluej.getExtensionPropertyString("sessionid",""));
+        this.bluej.setMenuGenerator(new MenuBuilder(this.api));
+        this.bluej.setPreferenceGenerator(new PreferenceBuilder(this.api, this.bluej));
+        
     }
 
     public boolean isCompatible () {
@@ -60,7 +57,7 @@ public class INGInious extends Extension implements PackageListener {
 
     public void terminate() {
         // Save sessionId for subsequent submissions
-        bluej.setExtensionPropertyString("sessionid", API.getSessionId());
+        bluej.setExtensionPropertyString("sessionid", api.getSessionId());
     }
 
     public String getDescription () {
@@ -80,14 +77,6 @@ public class INGInious extends Extension implements PackageListener {
 
     public static void main(String[] args) {
         // For build purposes
-    }
-
-    public void packageClosing(PackageEvent arg0) {
-        // Not used
-    }
-
-    public void packageOpened(PackageEvent arg0) {
-        // Not used
     }
 
 }

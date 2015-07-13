@@ -30,11 +30,14 @@ public class AuthenticationGUI {
     private JPanel mainPanel, labelPanel, controlPanel;
     private JLabel authLabel;
     private JComboBox<AuthMethod> authCombo;
+    private API api;
 
-    public AuthenticationGUI() throws Exception {
+    public AuthenticationGUI(API api) throws Exception {
+        this.api = api;
+        
         this.labelPanel = new JPanel(new GridLayout(0, 1, 5, 5));
         this.authLabel = new JLabel("Auth method", SwingConstants.RIGHT);
-        this.authCombo = new JComboBox<AuthMethod>(new Vector<AuthMethod>(AuthMethod.getAllFromAPI(INGInious.API)));
+        this.authCombo = new JComboBox<AuthMethod>(new Vector<AuthMethod>(AuthMethod.getAllFromAPI(this.api)));
         this.controlPanel = new JPanel(new GridLayout(0, 1, 5, 5));
         this.mainPanel = new JPanel(new BorderLayout(10, 10));
 
@@ -59,7 +62,7 @@ public class AuthenticationGUI {
 
         // Open dialog box for authentication
         if(JOptionPane.showConfirmDialog(null, mainPanel, "Authentication", JOptionPane.OK_CANCEL_OPTION) == 0)
-            return INGInious.API.authenticate((AuthMethod) authCombo.getSelectedItem()) ? 1 : 0;
+            return api.authenticate((AuthMethod) authCombo.getSelectedItem()) ? 1 : 0;
         else
             return 2;
     }

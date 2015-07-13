@@ -17,6 +17,7 @@
 
 package inginious.plugin;
 import bluej.extensions.*;
+import inginious.api.API;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,9 +34,11 @@ class PreferenceBuilder implements PreferenceGenerator {
     private JPanel mainPanel;
     private JTextField urlField;
     private BlueJ bluej;
+    private API api;
 
     // Construct the panel, and initialize it from any stored values
-    public PreferenceBuilder(BlueJ bluej) {
+    public PreferenceBuilder(API api, BlueJ bluej) {
+        this.api = api;
         this.bluej = bluej;
 
         urlField = new JTextField();
@@ -70,7 +73,7 @@ class PreferenceBuilder implements PreferenceGenerator {
         bluej.setExtensionPropertyString("url", urlField.getText());
 
         // Change API URL
-        INGInious.API.setUrl(urlField.getText());
+        api.setUrl(urlField.getText());
     }
 
     public void loadValues () {
@@ -86,7 +89,7 @@ class PreferenceBuilder implements PreferenceGenerator {
                     urlField.setText(urlField.getText() + "/");
 
                 // If method do not send exception, connection must be considered OK
-                INGInious.API.checkConnection(urlField.getText());
+                api.checkConnection(urlField.getText());
                 JOptionPane.showMessageDialog(null, "Connection OK");
 
             } catch(FileNotFoundException e) {

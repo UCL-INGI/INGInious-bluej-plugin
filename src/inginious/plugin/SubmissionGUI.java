@@ -43,28 +43,33 @@ public class SubmissionGUI {
     private JComboBox<Course> courseCombo;
     private JComboBox<Task> taskCombo;
     private JLabel userLabel;
+    private static Course lastCourse;
+    private static Task lastTask;
+    private API api;
 
-    public SubmissionGUI() throws Exception {
+    public SubmissionGUI(API api) throws Exception {
+        this.api = api;
+        
         // Get courses user is registered to and init a combobox
-        List<Course> courses = Course.getAllFromAPI(INGInious.API, false);
+        List<Course> courses = Course.getAllFromAPI(api, false);
         courseCombo = new JComboBox<Course>(new Vector<Course>(courses));
 
         // If last course is set, select good item
-        if(INGInious.lastCourse != null)
-            courseCombo.setSelectedItem(INGInious.lastCourse);
+        if(lastCourse != null)
+            courseCombo.setSelectedItem(lastCourse);
         else
-            INGInious.lastCourse = courses.get(0);
+            lastCourse = courses.get(0);
 
         // Get list of tasks and init a combobox
-        taskCombo = new JComboBox<Task>(new Vector<Task>(Task.getAllFromAPI(INGInious.API, INGInious.lastCourse.getId())));
+        taskCombo = new JComboBox<Task>(new Vector<Task>(Task.getAllFromAPI(api, lastCourse.getId())));
         courseCombo.addItemListener(new ComboListener());
 
         // If last task is set, select good item
-        if(INGInious.lastTask != null)
-            taskCombo.setSelectedItem(INGInious.lastTask);
+        if(lastTask != null)
+            taskCombo.setSelectedItem(lastTask);
 
         // Init user label and change user button
-        userLabel = new JLabel(INGInious.API.getUsername());
+        userLabel = new JLabel(api.getUsername());
         JButton changeButton = new JButton("Change user");
         changeButton.addActionListener(new AuthListener());
 
@@ -101,14 +106,14 @@ public class SubmissionGUI {
         // Ask user to choose and confirm submit
         if(JOptionPane.showConfirmDialog(null, mainPanel, "Submitting", JOptionPane.OK_CANCEL_OPTION) == 0)
         {
-            INGInious.lastCourse = (Course) courseCombo.getSelectedItem();
-            INGInious.lastTask = (Task) taskCombo.getSelectedItem();
+            lastCourse = (Course) courseCombo.getSelectedItem();
+            lastTask = (Task) taskCombo.getSelectedItem();
 
             // Currently, the BlueJ plugin is only able to submit entire project
-            Submitter sub = new Submitter(INGInious.API, INGInious.lastCourse .getId(), INGInious.lastTask.getId());
+            Submitter sub = new Submitter(api, lastCourse .getId(), lastTask.getId());
 
             // Make a zip file of the whole project and send it as the first problem input
-            sub.addFilePart(INGInious.lastTask.getProblems()[0].getId(), makeZipFile(project.getDir()), "test.zip");
+            sub.addFilePart(lastTask.getProblems()[0].getId(), makeZipFile(project.getDir()), "test.zip");
 
             return sub.submit();
         }
@@ -179,17 +184,17 @@ public class SubmissionGUI {
         @Override
         public void actionPerformed(ActionEvent arg0) {
             try {
-                int auth = new AuthenticationGUI().authenticate();
+                int auth = new AuthenticationGUI(api).authenticate();
                 if(auth == 1) {
-                    userLabel.setText(INGInious.API.getUsername());
+                    userLabel.setText(api.getUsername());
 
                     courseCombo.removeAllItems();
                     taskCombo.removeAllItems();
 
-                    for(Course course : Course.getAllFromAPI(INGInious.API, false))
+                    for(Course course : Course.getAllFromAPI(api, false))
                         courseCombo.addItem(course);
 
-                    for(Task task : Task.getAllFromAPI(INGInious.API, ((Course)courseCombo.getSelectedItem()).getId()))
+                    for(Task task : Task.getAllFromAPI(api, ((Course)courseCombo.getSelectedItem()).getId()))
                         taskCombo.addItem(task);
 
                 } else if(auth == 0) {
@@ -209,7 +214,7 @@ public class SubmissionGUI {
             Course course = (Course) i.getItem();
             try {
                 taskCombo.removeAllItems();
-                for(Task task : Task.getAllFromAPI(INGInious.API, course.getId()))
+                for(Task task : Task.getAllFromAPI(api, course.getId()))
                     taskCombo.addItem(task);
 
             } catch (Exception e) {
