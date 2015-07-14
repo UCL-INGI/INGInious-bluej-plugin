@@ -28,14 +28,14 @@ import javax.swing.JScrollPane;
 
 import inginious.api.*;
 
-public class SubmissionListener extends Thread {
+public class FeedbackGUI extends Thread {
     
     private Course course;
     private Task task;
     private String submissionId;
     private API api;
     
-    public SubmissionListener(API api, Course course, Task task, String submissionId) {
+    public FeedbackGUI(API api, Course course, Task task, String submissionId) {
         this.api = api;
         this.course = course;
         this.task = task;

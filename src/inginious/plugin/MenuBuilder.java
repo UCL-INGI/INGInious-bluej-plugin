@@ -84,8 +84,8 @@ class MenuBuilder extends MenuGenerator {
                 if(subid != null && !subid.equals("")) {
                     JOptionPane.showMessageDialog(null, "Your project has been successfully submitted\nSubmission ID : " + subid);
                     
-                    // Start a new submission listener to display feedback when available
-                    new SubmissionListener(api, subGui.getSelectedCourse(), subGui.getSelectedTask(), subid).start();
+                    // Start a new thread to display feedback when available
+                    new FeedbackGUI(api, subGui.getSelectedCourse(), subGui.getSelectedTask(), subid).start();
                 }
                 else if(subid == null)
                     JOptionPane.showMessageDialog(null, "Your project couldn't be submitted\n"
