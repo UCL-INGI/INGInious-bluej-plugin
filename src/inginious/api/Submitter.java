@@ -27,6 +27,9 @@ import java.util.Map;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
+/**
+ * Class used to ease the submission for a given task
+ */
 public class Submitter {
     private final String boundary;
     private static final String LINE_FEED = "\r\n";
@@ -35,7 +38,13 @@ public class Submitter {
     private PrintWriter writer;
     private API api;
 
-
+    /**
+     * Initialize a new Submitter for the given course and task
+     * @param api Instance of the INGInious API
+     * @param courseId Course id
+     * @param taskId Task id
+     * @throws Exception
+     */
     public Submitter(API api, String courseId, String taskId) throws Exception {
         this.api = api;
 
@@ -55,16 +64,16 @@ public class Submitter {
     }
 
     /**
-     * Adds a form field to the request
-     * @param name field name
+     * Adds a text field for the given problem id
+     * @param problemId field name
      * @param value field value
      */
-    public void addFormField(String name, String value) {
+    public void addTextField(String problemId, String value) {
         // Add a boundary
         writer.append("--" + boundary).append(LINE_FEED);
 
         // Specify Content-Disposition, Content-Type and write value
-        writer.append("Content-Disposition: form-data; name=\"" + name + "\"").append(LINE_FEED);
+        writer.append("Content-Disposition: form-data; name=\"" + problemId + "\"").append(LINE_FEED);
         writer.append("Content-Type: text/plain; charset=utf-8").append(LINE_FEED);
         writer.append(LINE_FEED);
         writer.append(value).append(LINE_FEED);
@@ -72,17 +81,18 @@ public class Submitter {
     }
 
     /**
-     * Adds a upload file section to the request
-     * @param fieldName name attribute in <input type="file" name="..." />
-     * @param uploadFile a File to be uploaded
+     * Adds a file for the given problem id
+     * @param problemId Problem id
+     * @param uploadFile a byte array of the file to be uploaded
+     * @param fileName Filename given to the server when executing POST request
      * @throws IOException
      */
-    public void addFilePart(String fieldName, byte[] uploadFile, String fileName) throws IOException {
+    public void addFilePart(String problemId, byte[] uploadFile, String fileName) throws IOException {
         // Add a boundary
         writer.append("--" + boundary).append(LINE_FEED);
 
         // Specify that data is a binary file
-        writer.append("Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" + fileName + "\"").append(LINE_FEED);
+        writer.append("Content-Disposition: form-data; name=\"" + problemId + "\"; filename=\"" + fileName + "\"").append(LINE_FEED);
         writer.append("Content-Type: application/octet-stream").append(LINE_FEED);
         writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED);
         writer.append(LINE_FEED);
@@ -99,8 +109,9 @@ public class Submitter {
 
     /**
      * Completes the request and receives response from the server.
+     * @return Submission id if succeeded
      * @throws Exception 
-     * @throws JsonSyntaxException 
+     * @throws JsonSyntaxException
      */
     public String submit() throws JsonSyntaxException, Exception {
         // Add the final boundary and close the stream

@@ -28,6 +28,9 @@ import javax.swing.JScrollPane;
 
 import inginious.api.*;
 
+/**
+ * Class extending Thread to display feedback once it is available
+ */
 public class FeedbackGUI extends Thread {
     
     private Course course;
@@ -35,6 +38,14 @@ public class FeedbackGUI extends Thread {
     private String submissionId;
     private API api;
     
+    /**
+     * Initialize a new thread which waits for the feedback to be available
+     * and display a new frame when it is.
+     * @param api Instance of the INGInious API
+     * @param course Course for which submission was made
+     * @param task Task for which submission was made
+     * @param submissionId Submission id of the submission feedback to display
+     */
     public FeedbackGUI(API api, Course course, Task task, String submissionId) {
         this.api = api;
         this.course = course;
@@ -42,6 +53,9 @@ public class FeedbackGUI extends Thread {
         this.submissionId = submissionId;
     }
     
+    /**
+     * Executes the subprogram specific to the thread (use start method to start the thread)
+     */
     public void run() {
         try {
             // Wait till feedback is available

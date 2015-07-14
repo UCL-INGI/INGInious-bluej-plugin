@@ -25,11 +25,17 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+/**
+ * Class extending MenuGenerator to add MenuItems in BlueJ menus
+ */
 class MenuBuilder extends MenuGenerator {
 
     private BPackage aPackage;
     private API api;
 
+    /**
+     * Called when Tool menu items are displayed
+     */
     public JMenuItem getToolsMenuItem(BPackage aPackage) {
         this.aPackage = aPackage;
 
@@ -38,11 +44,18 @@ class MenuBuilder extends MenuGenerator {
         return menu;
     }
     
+    /**
+     * Initializes a new MenuBuilder
+     * @param api Instance of the INGInious API
+     */
     public MenuBuilder(API api) {
         super();
         this.api = api;
     }
 
+    /**
+     * ActionListener to handle the click on the "Submit on INGInious" menu item
+     */
     private class SubmitListener implements ActionListener {
 
         @Override

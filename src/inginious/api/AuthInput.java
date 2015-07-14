@@ -19,32 +19,61 @@ package inginious.api;
 
 import javax.swing.JTextField;
 
+/**
+ * Class used to deserialize the Authentication Input field returned by the INGInious API
+ */
 public class AuthInput {
     private String id;
     private String type;
     private String name;
     private transient JTextField tfield;
 
+    private AuthInput() {}
+    
+    /**
+     * Returns the type of the authentication input field instance
+     * @return String representing the type (login, password...)
+     */
     public String getType() {
         return this.type;
     }
 
+    /**
+     * Returns the displayed name of the authentication input field
+     * @return Name to display for the field
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Returns the id used to form the POST authentication request
+     * @return Id of the authentication field
+     */
     public String getId() {
         return this.id;
     }
 
+    /**
+     * Set the JTextField instance associated to the field
+     * @param val JTextField instance to which associate the input field
+     */
     public void setField(JTextField val) {
         this.tfield = val;
     }
 
+    /**
+     * Returns the JTextField associated to the input field
+     * @return JTextField instance
+     */
     public JTextField getField() {
         return this.tfield;
     }
 
+    /**
+     * Returns the value contained in the associated JTextField instance used for POST request
+     * @return String value used for POST request
+     */
     public String getValue() {
         return this.tfield.getText();
     }

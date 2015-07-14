@@ -32,42 +32,79 @@ import javax.net.ssl.X509TrustManager;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
+/**
+ * Main class for using the INGInious API
+ */
 public class API {
     private String sessionId;
     private String username;
     private String apiUrl;
     private Gson gson;
 
+    /**
+     * Initialize a new API object from an INGInious API url
+     * @param apiUrl Path to INGInious API
+     */
     public API(String apiUrl) {
         this.apiUrl = apiUrl;
         gson = new GsonBuilder().create();
     }
 
+    /**
+     * Initialize a new API object from an INGInious API url and session id
+     * @param apiUrl Path to INGInious API
+     * @param sessionId Session ID as returned by the cookies
+     */
     public API(String apiUrl, String sessionId) {
         this(apiUrl);
         this.sessionId = sessionId;
     }
 
+    /**
+     * Returns the username of the current logged user
+     * @return Username of the logged user
+     */
     public String getUsername() {
         return this.username;
     }
 
+    /**
+     * Set the path to the INGInious API
+     * @param url Path to INGInious API 
+     */
     public void setUrl(String url) {
         this.apiUrl = url;
     }
 
+    /**
+     * Returns the path to the INGInious API
+     * @return Path to the INGinious API
+     */
     public String getUrl() {
         return this.apiUrl;
     }
 
+    /**
+     * Returns the session ID of the current user
+     * @return Possibly empty session ID string
+     */
     public String getSessionId() {
         return this.sessionId;
     }
 
+    /**
+     * Returns the Gson instance
+     * @return Gson object
+     */
     public Gson getGson() {
         return gson;
     }
 
+    /**
+     * Indicates if the current user is authenticated on the server
+     * @return True if authenticated, else False
+     * @throws Exception
+     */
     public boolean isAuthenticated() throws Exception {
         HttpURLConnection conn = getHttpURLConnection("authentication");
         InternalAuthStatus status = gson.fromJson(readHTTPContent(conn), InternalAuthStatus.class);
@@ -76,6 +113,12 @@ public class API {
         return status.authenticated;
     }
 
+    /**
+     * Authenticate current user on the server
+     * @param authMethod Authentication method chosen with value-set Authentication inputs
+     * @return True if authenticated, else False
+     * @throws Exception
+     */
     public boolean authenticate(AuthMethod authMethod) throws Exception {
         HttpURLConnection conn = getHttpURLConnection("authentication");
 
@@ -113,6 +156,11 @@ public class API {
         return authenticated;
     }
 
+    /**
+     * Parse the cookies returned by the server to a String to String map
+     * @param conn Opened HttpURLConnection connection
+     * @return Possibly empty HashMap with cookies name as keys
+     */
     private Map<String,String> parseCookies(HttpURLConnection conn) {
         Map<String,String> cookies = new HashMap<String,String>();
 
@@ -136,15 +184,33 @@ public class API {
         return cookies;
     }
 
+    /**
+     * Try to fetch the API content at the specified URL and returns an exception if not
+     * @param myApiUrl Path to the INGInious API to be tested
+     * @throws Exception
+     */
     public void checkConnection(String myApiUrl) throws Exception {
         HttpURLConnection conn = getHttpURLConnection(myApiUrl, "auth_methods");
         conn.getContent();
     }
 
+    /**
+     * Returns a new HttpURLConnection to the specified subpath of the INGInious API
+     * @param spec Subpath to the INGInious API
+     * @return HttpURLConnection
+     * @throws Exception
+     */
     HttpURLConnection getHttpURLConnection(String spec) throws Exception {
         return getHttpURLConnection(apiUrl, spec);
     }
 
+    /**
+     * Returns a new HttpURLConnection to the specified path and subpath of the INGInious API
+     * @param myApiUrl Path to the INGInious API
+     * @param spec Subpath to the INGInious API
+     * @return HttpURLConnection
+     * @throws Exception
+     */
     HttpURLConnection getHttpURLConnection(String myApiUrl, String spec) throws Exception {
         URL url = new URL(myApiUrl + spec);
 
@@ -171,6 +237,12 @@ public class API {
         }
     }
 
+    /**
+     * Returns the text content of an HTTPURLConnection response
+     * @param conn : HttpURLConnection instance from which reads content
+     * @return String with the content of the HTTP response
+     * @throws Exception
+     */
     static String readHTTPContent(HttpURLConnection conn) throws Exception {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -188,12 +260,18 @@ public class API {
 
     }
 
+    /**
+     * Class used to deserialize the authentication status returned by the INGInious API
+     */
     private class InternalAuthStatus
     {
         public boolean authenticated;
         public String username;
     }
 
+    /**
+     * Class used to trust every SSL path even if certificate can't be checked
+     */
     private class TrustAllTrustManager implements X509TrustManager {
 
         @Override

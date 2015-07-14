@@ -24,11 +24,17 @@ import java.net.*;
 
 import javax.swing.JOptionPane;
 
+/**
+ * Main class, starting point of BlueJ extension
+ */
 public class INGInious extends Extension {
 
     private BlueJ bluej;
     private API api;
 
+    /**
+     * Called when BlueJ is launched
+     */
     public void startup (BlueJ bluej) {
 
         this.bluej = bluej;
@@ -43,28 +49,46 @@ public class INGInious extends Extension {
         
     }
 
+    /**
+     * Determines if plugin is compatible with BlueJ version
+     */
     public boolean isCompatible () {
         return true; 
     }
 
+    /**
+     * Returns the current version of the plugin
+     */
     public String  getVersion () { 
         return ("0.1");  
     }
 
+    /**
+     * Returns the name of the plugin
+     */
     public String  getName () { 
         return ("INGInious");  
     }
 
+    /**
+     * Called when BlueJ is terminated
+     */
     public void terminate() {
         // Save sessionId for subsequent submissions
         bluej.setExtensionPropertyString("sessionid", api.getSessionId());
     }
 
+    /**
+     * Returns the plugin description
+     */
     public String getDescription () {
         return ("The INGInious BlueJ extension enables students to submit their work "
                 + "on an INGInious platform directly from BlueJ interface");
     }
 
+    /**
+     * Returns the plugin information URL
+     */
     public URL getURL () {
         try {
             return new URL("https://github.com/UCL-INGI/INGInious-bluej-plugin");

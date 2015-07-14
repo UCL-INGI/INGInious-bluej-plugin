@@ -27,8 +27,8 @@ import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 
-/*
- * Preference panel class
+/**
+ * Class extending PreferenceGenerator to add panel to Preferences panel
  */
 class PreferenceBuilder implements PreferenceGenerator {
     private JPanel mainPanel;
@@ -36,7 +36,11 @@ class PreferenceBuilder implements PreferenceGenerator {
     private BlueJ bluej;
     private API api;
 
-    // Construct the panel, and initialize it from any stored values
+    /**
+     * Initialize a new PreferenceBuilder
+     * @param api Instance of the INGInious API
+     * @param bluej Instance of BlueJ
+     */
     public PreferenceBuilder(API api, BlueJ bluej) {
         this.api = api;
         this.bluej = bluej;
@@ -65,10 +69,16 @@ class PreferenceBuilder implements PreferenceGenerator {
         loadValues();
     }
 
+    /**
+     * Returns the panel to display
+     */
     public JPanel getPanel ()  { 
         return mainPanel; 
     }
 
+    /**
+     * Called when preferences need to be saved
+     */
     public void saveValues () {
         bluej.setExtensionPropertyString("url", urlField.getText());
 
@@ -76,10 +86,16 @@ class PreferenceBuilder implements PreferenceGenerator {
         api.setUrl(urlField.getText());
     }
 
+    /**
+     * Called when preferences need to be displayed
+     */
     public void loadValues () {
         urlField.setText(bluej.getExtensionPropertyString("url",""));
     }
     
+    /**
+     * ActionListener to handle the click on the "Test connection" button
+     */
     private class TestConnectionListener implements ActionListener {
 
         public void actionPerformed(ActionEvent anEvent) {

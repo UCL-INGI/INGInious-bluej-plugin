@@ -17,7 +17,9 @@
 
 package inginious.api;
 
-
+/**
+ * Class used to deserialize a Task problem returned by the INGInious API
+ */
 public class Problem {
     private String id;
     private String header;
@@ -26,26 +28,52 @@ public class Problem {
     private String language;
     private String[] allowed_exts;
 
+    private Problem() {}
+    
+    /**
+     * Returns the type of the task problem
+     * @return String representing the type of a task problem
+     */
     public String getType() {
         return this.type;
     }
 
+    /**
+     * Returns the header of the task problem
+     * @return Header of the task problem
+     */
     public String getHeader() {
         return this.header;
     }
 
+    /**
+     * Returns the task problem id used in POST request to submit
+     * @return Task problem id
+     */
     public String getId() {
         return this.id;
     }
 
+    /**
+     * Returns the displayed name of the task problem
+     * @return Displayed name of the task problem
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Returns the programming language of the task problem
+     * @return String representing the programming language of the task problem
+     */
     public String getLanguage() {
         return this.language;
     }
 
+    /**
+     * Returns the allowed extensions for file submissions
+     * @return Array of string containing the allowed file extensions
+     */
     public String[] getAllowedExtensions() {
         return this.allowed_exts;
     }

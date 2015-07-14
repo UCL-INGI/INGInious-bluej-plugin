@@ -24,6 +24,9 @@ import java.util.Map;
 
 import com.google.gson.reflect.TypeToken;
 
+/**
+ * Class used to deserialize a submission returned by the server 
+ */
 public class Submission {
 
     private String id;
@@ -33,40 +36,76 @@ public class Submission {
     private String submitted_on;
     private Map<String,String> problems_feedback;
     private String result;
-    private Map<String,Object> input;
 
+    private Submission() {}
+    
+    /**
+     * Returns the submission id
+     * @return Submission id
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Returns the current status of the submission
+     * @return String representing the current status of a submission (waiting, done,...)
+     */
     public String getStatus() {
         return status;
     }
 
+    /**
+     * Returns the main feedback of the task
+     * @return String containing the main feedback of the task
+     */
     public String getFeedback() {
         return feedback;
     }
 
+    /**
+     * Returns the user grade for the current task
+     * @return User grade
+     */
     public double getGrade() {
         return grade;
     }
 
+    /**
+     * Returns the datetime associated to the submission
+     * @return String representing the date and time at which the submission was made
+     */
     public String getSubmittedOn() {
         return submitted_on;
     }
 
+    /**
+     * Returns the specific feedback for a given problem id
+     * @param problemId problem id
+     * @return String containing the feedback for the specified problem
+     */
     public String getProblemFeedback(String problemId) {
         return problems_feedback.get(problemId);
     }
 
+    /**
+     * Returns the global result of the submission
+     * @return String representing the global result (success, crash, ...)
+     */
     public String getResult() {
         return result;
     }
 
-    public Object getProblemInput(String problemId) {
-        return input.get(problemId);
-    }
 
+    /**
+     * Returns the submission for the given course, task and submission id from the server
+     * @param api Instance of the INGInious API
+     * @param courseId Course id
+     * @param taskId Task id
+     * @param submissionId Submission id
+     * @return Submission
+     * @throws Exception
+     */
     public static Submission getFromAPI(API api, String courseId, String taskId, String submissionId) throws Exception {
 
         HttpURLConnection conn = api.getHttpURLConnection("courses/" + courseId + "/tasks/" + taskId + "/submissions/" + submissionId);
@@ -80,6 +119,14 @@ public class Submission {
         return  result.get(0);
     }
 
+    /**
+     * Returns all the available submissions for the given course and task from the server
+     * @param api Instance of the INGInious API
+     * @param courseId Course id
+     * @param taskId Task id
+     * @return List of Submission
+     * @throws Exception
+     */
     public static List<Submission> getAllFromAPI(API api, String courseId, String taskId) throws Exception {
         HttpURLConnection conn = api.getHttpURLConnection("courses/" + courseId + "/tasks/" + taskId + "/submissions");
 

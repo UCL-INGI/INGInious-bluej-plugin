@@ -25,6 +25,9 @@ import javax.swing.*;
 
 import inginious.api.*;
 
+/**
+ * Class to display an authentication dialog and authenticate the user
+ */
 public class AuthenticationGUI {
 
     private JPanel mainPanel, labelPanel, controlPanel;
@@ -32,6 +35,11 @@ public class AuthenticationGUI {
     private JComboBox<AuthMethod> authCombo;
     private API api;
 
+    /**
+     * Initialize a new authentication dialog
+     * @param api Instance of the INGInious API
+     * @throws Exception
+     */
     public AuthenticationGUI(API api) throws Exception {
         this.api = api;
         
@@ -68,6 +76,10 @@ public class AuthenticationGUI {
     }
 
 
+    /**
+     * Update/Refresh the dialog panel for the given authentication method
+     * @param am Authentication method to use
+     */
     private void updatePanel(AuthMethod am)
     {
         // Empty panels

@@ -25,7 +25,9 @@ import java.util.Map;
 
 import com.google.gson.reflect.TypeToken;
 
-
+/**
+ * Class used to deserialize the Course information returned by the INGInious API
+ */
 public class Course {
 
     private Map<String,String> tasks;
@@ -35,34 +37,66 @@ public class Course {
     private boolean is_registered;
     private String id;
 
+    private Course() {}
+    
+    /**
+     * Returns the displayed name of the course
+     * @return Displayed name of the course
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Returns the course id
+     * @return Course id
+     */
     public String getId() {
         return this.id;
     }
 
+    /**
+     * Indicates if user is registered to the course
+     * @return True if user is registered, else False
+     */
     public boolean isRegistered() {
         return this.is_registered;
     }
 
+    /**
+     * Indicates if course require password to register
+     * @return True if it requires, else False
+     */
     public boolean requirePassword() {
         return this.require_password;
     }
 
+    /**
+     * Returns the current user grade for the course
+     * @return User grade
+     */
     public double getGrade() {
         return this.grade;
     }
 
+    /**
+     * Returns a map of the tasks id and names
+     * @return Map with task id as key and names as values
+     */
     public Map<String,String> getTaskNames() {
         return this.tasks;
     }
 
+    /**
+     * Returns the displayed name of the course
+     */
     public String toString() {
         return this.name;
     }
 
+    /**
+     * Indicates if the object given in argument is equal to the current instance
+     */
     public boolean equals(Object anObject) {
         if(anObject == null)
             return false;
@@ -70,6 +104,12 @@ public class Course {
         return this.id.equals(((Course)anObject).getId());
     }
 
+    /**
+     * Returns all the available courses from the server
+     * @param api Instance of the INGInious API
+     * @return List of Course
+     * @throws Exception
+     */
     public static List<Course> getAllFromAPI(API api) throws Exception {
         HttpURLConnection conn = api.getHttpURLConnection("courses");
 
@@ -82,6 +122,13 @@ public class Course {
         return result;
     }
 
+    /**
+     * Returns all the available courses from the server
+     * @param api Instance of the INGInious API
+     * @param allCourses True if all courses are asked, False if only courses user is registered to are asked
+     * @return List of Course
+     * @throws Exception
+     */
     public static List<Course> getAllFromAPI(API api, boolean allCourses) throws Exception {
 
         // If all courses needed, return directly
@@ -99,6 +146,13 @@ public class Course {
         }
     }
 
+    /**
+     * Returns the course from the given course id from the server
+     * @param api Instance of the INGInious API
+     * @param courseId Course id
+     * @return Course
+     * @throws Exception
+     */
     public static Course getFromAPI(API api, String courseId) throws Exception {
         HttpURLConnection conn = api.getHttpURLConnection("courses/" + courseId);
 

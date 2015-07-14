@@ -37,6 +37,9 @@ import bluej.extensions.BProject;
 
 import inginious.api.*;
 
+/**
+ * Class to display a submission dialog for user to choose Course and Task
+ */
 public class SubmissionGUI {
 
     private JPanel mainPanel;
@@ -47,6 +50,11 @@ public class SubmissionGUI {
     private static Task lastTask;
     private API api;
 
+    /**
+     * Initalize a new SubmissionGUI
+     * @param api Instance of the INGInious API
+     * @throws Exception
+     */
     public SubmissionGUI(API api) throws Exception {
         this.api = api;
         
@@ -96,10 +104,18 @@ public class SubmissionGUI {
         mainPanel.add(controls, BorderLayout.CENTER);
     }
 
+    /**
+     * Returns the selected course in the submission dialog
+     * @return Course
+     */
     public Course getSelectedCourse() {
         return (Course) courseCombo.getSelectedItem();
     }
     
+    /**
+     * Returns the selected task in the submission dialog
+     * @return Task
+     */
     public Task getSelectedTask() {
         return (Task) taskCombo.getSelectedItem();
     }
@@ -128,6 +144,12 @@ public class SubmissionGUI {
         return "";
     }
 
+    /**
+     * Returns the byte array of the zipped folder
+     * @param parent File object corresponding to the folder to zip
+     * @return Byte array of the compressed folder
+     * @throws IOException
+     */
     private byte[] makeZipFile(File parent) throws IOException {
 
         // Prepare list of file in folder
@@ -177,6 +199,11 @@ public class SubmissionGUI {
         return result;
     }
 
+    /**
+     * Returns a list of all the files contained in a directory and its subdirectories
+     * @param dir File object corresponding to the main folder
+     * @param list File list to which add the files
+     */
     private void listFiles(File dir, List<File> list) {
         // Recursively add the files contained in directory
         for(File f : dir.listFiles()) {
@@ -187,6 +214,9 @@ public class SubmissionGUI {
         }
     }
     
+    /**
+     * ActionListener to handle the click on the "Change user" button
+     */
     private class AuthListener implements ActionListener {
 
         @Override
@@ -215,6 +245,10 @@ public class SubmissionGUI {
         }
     }
 
+    /**
+     * ItemListener to handle the selection of a course in the course combo box
+     * and update the task combo box
+     */
     private class ComboListener implements ItemListener {
 
         @Override

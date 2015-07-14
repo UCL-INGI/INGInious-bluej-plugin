@@ -23,29 +23,54 @@ import java.util.List;
 
 import com.google.gson.reflect.TypeToken;
 
+/**
+ * Class used to deserialize the authentication method returned by the INGInious API
+ */
 public class AuthMethod
 {
     private String id;
     private AuthInput[] input;
     private String name;
 
-    public String getName()
-    {
+    private AuthMethod() {}
+    
+    /**
+     * Returns the displayed name of the authentication method
+     * @return Displayed name of the authentication method
+     */
+    public String getName() {
         return name;
     }
 
+    /**
+     * Returns the POST request id of the authentication method
+     * @return ID
+     */
     public String getId() {
         return this.id;
     }
 
+    /**
+     * Returns the input field array used for authentication
+     * @return AuthInput array
+     */
     public AuthInput[] getInput() {
         return input;
     }
 
+    /**
+     * Returns the displayed name of the authentication method
+     */
     public String toString() {
         return name;
     }
 
+    /**
+     * Returns all the available authentication methods from the server
+     * @param api Instance of the INGInious API
+     * @return List of AuthMethod
+     * @throws Exception
+     */
     public static List<AuthMethod> getAllFromAPI(API api) throws Exception {
         HttpURLConnection conn = api.getHttpURLConnection("auth_methods");
 
