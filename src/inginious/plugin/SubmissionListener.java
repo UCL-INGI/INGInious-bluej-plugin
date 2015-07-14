@@ -1,3 +1,20 @@
+//
+// This file is part of the INGInious BlueJ plugin.
+//
+// The INGInious BlueJ plugin is free software: you can redistribute
+// it and/or modify it under the terms of the GNU General Public
+// License as published by the Free Software Foundation, either
+// version 3 of the License, or (at your option) any later version.
+//
+// The INGInious BlueJ plugin is distributed in the hope that it will
+// be useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
+// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with the INGInious BlueJ plugin.  If not, see <http://www.gnu.org/licenses/>.
+//
+
 package inginious.plugin;
 
 import java.awt.BorderLayout;
@@ -28,11 +45,11 @@ public class SubmissionListener extends Thread {
     public void run() {
         try {
             // Wait till feedback is available
-            Submission sub;
-            do {
-                sub = Submission.getFromAPI(api, course.getId(), task.getId(), submissionId);
+            Submission sub = Submission.getFromAPI(api, course.getId(), task.getId(), submissionId);
+            while(sub.getStatus().equals("waiting")) {
                 Thread.sleep(1000);
-            } while(sub.getStatus().equals("waiting"));
+                sub = Submission.getFromAPI(api, course.getId(), task.getId(), submissionId);
+            }
             
             // Produce small HTML code to format feedback
             String html = "<html><body>";
@@ -46,7 +63,7 @@ public class SubmissionListener extends Thread {
             JScrollPane scrollPane = new JScrollPane(new JEditorPane("text/html", html));
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             
-            // Initialize a panel to stretch the editor to the broder of the window
+            // Initialize a panel to stretch the editor to the border of the window
             JPanel mainPanel = new JPanel();
             mainPanel.setLayout(new BorderLayout());
             mainPanel.add(scrollPane, BorderLayout.CENTER);
