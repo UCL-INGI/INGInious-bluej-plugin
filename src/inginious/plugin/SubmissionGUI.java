@@ -96,6 +96,14 @@ public class SubmissionGUI {
         mainPanel.add(controls, BorderLayout.CENTER);
     }
 
+    public Course getSelectedCourse() {
+        return (Course) courseCombo.getSelectedItem();
+    }
+    
+    public Task getSelectedTask() {
+        return (Task) taskCombo.getSelectedItem();
+    }
+    
     /**
      * Display a dialog for choosing task and submit the whole current BlueJ project
      * @param project The BlueJ project

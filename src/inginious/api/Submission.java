@@ -33,7 +33,7 @@ public class Submission {
     private String submitted_on;
     private Map<String,String> problems_feedback;
     private String result;
-    private Map<String,String> input;
+    private Map<String,Object> input;
 
     public String getId() {
         return id;
@@ -51,7 +51,7 @@ public class Submission {
         return grade;
     }
 
-    public String getSubmitted_on() {
+    public String getSubmittedOn() {
         return submitted_on;
     }
 
@@ -63,11 +63,11 @@ public class Submission {
         return result;
     }
 
-    public String getProblemInput(String problemId) {
+    public Object getProblemInput(String problemId) {
         return input.get(problemId);
     }
 
-    public Submission getFromAPI(API api, String courseId, String taskId, String submissionId) throws Exception {
+    public static Submission getFromAPI(API api, String courseId, String taskId, String submissionId) throws Exception {
 
         HttpURLConnection conn = api.getHttpURLConnection("courses/" + courseId + "/tasks/" + taskId + "/submissions/" + submissionId);
 
@@ -80,7 +80,7 @@ public class Submission {
         return  result.get(0);
     }
 
-    public List<Submission> getAllFromAPI(API api, String courseId, String taskId) throws Exception {
+    public static List<Submission> getAllFromAPI(API api, String courseId, String taskId) throws Exception {
         HttpURLConnection conn = api.getHttpURLConnection("courses/" + courseId + "/tasks/" + taskId + "/submissions");
 
         // Parse JSON response of the server
