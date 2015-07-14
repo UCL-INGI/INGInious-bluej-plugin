@@ -66,7 +66,7 @@ public class FeedbackGUI extends Thread {
             }
             
             // Produce small HTML code to format feedback
-            String html = "<html><body>";
+            String html = "<html><body style=\"font-family: sans-serif;\">";
             html += "<h1>" + course.getName() + "</h1>";
             html += "<h2>" + task.getName() + "</h2>";
             html += "<h3> Your grade : " + Math.round(sub.getGrade()) + " %</h3>";
