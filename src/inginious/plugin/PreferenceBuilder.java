@@ -48,7 +48,7 @@ class PreferenceBuilder implements PreferenceGenerator {
         urlField = new JTextField();
 
         JPanel labelPanel = new JPanel(new GridLayout(0, 1, 10, 10));
-        labelPanel.add(new JLabel(" API URL : ", SwingConstants.RIGHT));
+        labelPanel.add(new JLabel(" Default API URL : ", SwingConstants.RIGHT));
 
         JPanel fieldPanel = new JPanel(new GridLayout(0, 1, 10, 10));
         fieldPanel.add(urlField);

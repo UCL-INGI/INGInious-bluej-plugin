@@ -58,8 +58,36 @@ class MenuBuilder extends MenuGenerator {
      */
     private class SubmitListener implements ActionListener {
 
+        private String tempUrl;
+        
+        /**
+         * Save default API url and replace it by project one
+         */
+        private void saveAPIUrl() {
+            tempUrl = api.getUrl();
+            try {
+                ProjectConfig pc = new ProjectConfig(api, aPackage.getProject());
+                String url = pc.getUrl();
+                if(url != null)
+                    api.setUrl(url);
+            } catch (ProjectNotOpenException e) {
+                JOptionPane.showMessageDialog(null, "Unhandled error\n" + e.getClass().getName() + " : " + e.getMessage(), 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+        /**
+         * Restore default API url
+         */
+        private void restoreAPIUrl() {
+            api.setUrl(tempUrl);
+        }
+        
         @Override
         public void actionPerformed(ActionEvent arg0) {
+            
+            saveAPIUrl();
+            
             // Check if authentified
             boolean authenticated = false;
 
@@ -91,8 +119,8 @@ class MenuBuilder extends MenuGenerator {
             // Submit project
             // Currently, the plugin only supports submitting a zipfile of the project as a one-problem-task input
             try {
-                SubmissionGUI subGui = new SubmissionGUI(api);
-                String subid = subGui.submitProject(aPackage.getProject());
+                SubmissionGUI subGui = new SubmissionGUI(api, aPackage.getProject());
+                String subid = subGui.submitProject();
 
                 if(subid != null && !subid.equals("")) {
                     JOptionPane.showMessageDialog(null, "Your project has been successfully submitted\nSubmission ID : " + subid);
@@ -109,6 +137,8 @@ class MenuBuilder extends MenuGenerator {
                         "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            
+            restoreAPIUrl();
         }
 
     }   

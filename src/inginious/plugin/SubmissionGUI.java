@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -49,32 +50,57 @@ public class SubmissionGUI {
     private static Course lastCourse;
     private static Task lastTask;
     private API api;
+    private BProject bProject;
+    private ProjectConfig projectConfig;
+    private File pluginFile;
 
     /**
      * Initalize a new SubmissionGUI
      * @param api Instance of the INGInious API
      * @throws Exception
      */
-    public SubmissionGUI(API api) throws Exception {
+    public SubmissionGUI(API api, BProject bProject) throws Exception {
+        this.bProject = bProject;
         this.api = api;
+        this.projectConfig = new ProjectConfig(api, bProject);
+        this.pluginFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
         
-        // Get courses user is registered to and init a combobox
-        List<Course> courses = Course.getAllFromAPI(api, false);
-        courseCombo = new JComboBox<Course>(new Vector<Course>(courses));
+        String courseId = projectConfig.getCourseId();
+        
+        // Check if course id is overrided
+        if(courseId != null) {
+            courseCombo = new JComboBox<Course>();
+            courseCombo.addItem(Course.getFromAPI(api, courseId));
+            courseCombo.setEnabled(false);
+            
+        } else {
+            // Get courses user is registered to and init a combobox
+            List<Course> courses = Course.getAllFromAPI(api, false);
+            courseCombo = new JComboBox<Course>(new Vector<Course>(courses));
+    
+            // If last course is set, select good item
+            if(lastCourse != null)
+                courseCombo.setSelectedItem(lastCourse);
+            else
+                lastCourse = courses.get(0);
+        }
 
-        // If last course is set, select good item
-        if(lastCourse != null)
-            courseCombo.setSelectedItem(lastCourse);
-        else
-            lastCourse = courses.get(0);
-
-        // Get list of tasks and init a combobox
-        taskCombo = new JComboBox<Task>(new Vector<Task>(Task.getAllFromAPI(api, lastCourse.getId())));
-        courseCombo.addItemListener(new ComboListener());
-
-        // If last task is set, select good item
-        if(lastTask != null)
-            taskCombo.setSelectedItem(lastTask);
+        String taskId = projectConfig.getTaskId();
+        
+        // Check if task id is overrided
+        if(taskId != null) {
+           taskCombo = new JComboBox<Task>();
+           taskCombo.addItem(Task.getFromAPI(api, courseId, taskId));
+           taskCombo.setEnabled(false);
+        } else {
+            // Get list of tasks and init a combobox
+            taskCombo = new JComboBox<Task>(new Vector<Task>(Task.getAllFromAPI(api, lastCourse.getId())));
+            courseCombo.addItemListener(new ComboListener());
+    
+            // If last task is set, select good item
+            if(lastTask != null)
+                taskCombo.setSelectedItem(lastTask);
+        }
 
         // Init user label and change user button
         userLabel = new JLabel(api.getUsername());
@@ -126,21 +152,22 @@ public class SubmissionGUI {
      * @return null if submission failed, submission id if it succeeded, empty string if user cancelled
      * @throws Exception
      */
-    public String submitProject(BProject project) throws Exception {
+    public String submitProject() throws Exception {
         // Ask user to choose and confirm submit
-        if(JOptionPane.showConfirmDialog(null, mainPanel, "Submitting", JOptionPane.OK_CANCEL_OPTION) == 0)
+        if(JOptionPane.showConfirmDialog(null, mainPanel, "Submitting " + bProject.getName(), JOptionPane.OK_CANCEL_OPTION) == 0)
         {
             lastCourse = (Course) courseCombo.getSelectedItem();
             lastTask = (Task) taskCombo.getSelectedItem();
-
+            
             // Currently, the BlueJ plugin is only able to submit entire project
             Submitter sub = new Submitter(api, lastCourse .getId(), lastTask.getId());
 
             // Make a zip file of the whole project and send it as the first problem input
-            sub.addFilePart(lastTask.getProblems()[0].getId(), makeZipFile(project.getDir()), "test.zip");
-
+            sub.addFilePart(lastTask.getProblems()[0].getId(), makeZipFile(bProject.getDir()), "test.zip");
+            
             return sub.submit();
         }
+        
         return "";
     }
 
@@ -149,8 +176,9 @@ public class SubmissionGUI {
      * @param parent File object corresponding to the folder to zip
      * @return Byte array of the compressed folder
      * @throws IOException
+     * @throws URISyntaxException 
      */
-    private byte[] makeZipFile(File parent) throws IOException {
+    private byte[] makeZipFile(File parent) throws IOException, URISyntaxException {
 
         // Prepare list of file in folder
         List<File> files = new ArrayList<File>();
@@ -203,13 +231,14 @@ public class SubmissionGUI {
      * Returns a list of all the files contained in a directory and its subdirectories
      * @param dir File object corresponding to the main folder
      * @param list File list to which add the files
+     * @throws IOException 
      */
-    private void listFiles(File dir, List<File> list) {
+    private void listFiles(File dir, List<File> list) throws IOException {
         // Recursively add the files contained in directory
         for(File f : dir.listFiles()) {
             if(f.isDirectory())
                 listFiles(f, list);
-            else
+            else if(!f.equals(pluginFile))
                 list.add(f);
         }
     }
