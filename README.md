@@ -1,5 +1,7 @@
 # INGInious BlueJ plugin
 
+[![Build Status](http://jenkins2.info.ucl.ac.be/job/INGInious-BlueJ/badge/icon)](http://jenkins2.info.ucl.ac.be/job/INGInious-BlueJ/)
+
 INGInious is an intelligent grader that allows secured and automated testing of code made by students. 
 
 This BlueJ plugin is aimed at submitting projects directly from the BlueJ interface without logging 
@@ -17,6 +19,8 @@ or `<BLUEJ_HOME>/BlueJ.app/Contents/Resources/Java/extensions` (Mac) to make it 
 * `<USER_HOME>/.bluej/extensions` (Unix), or `<USER_HOME>\bluej\extensions` (Windows), or 
 `<USER_HOME>/Library/Preferences/org.bluej/extensions` (Mac) to make it available for all projects of a single user
 * `<BLUEJ_PROJECT>/extensions` to make it available for a single project
+
+Development builds are available on our [Jenkins instance](http://jenkins2.info.ucl.ac.be/job/INGInious-BlueJ/).
 
 ### Configuration
 
