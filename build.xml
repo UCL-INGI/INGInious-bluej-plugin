@@ -3,6 +3,8 @@
     <property name="dir.buildfile" value="."/>
     <property name="dir.jarfile" value="./jar"/>
     <target name="create_jar">
+	<mkdir dir="bin" />
+        <mkdir dir="jar" />
         <jar destfile="${dir.jarfile}/INGInious.jar">
             <manifest>
                 <attribute name="Class-Path" value="."/>
