@@ -86,7 +86,7 @@ public class ProjectConfig {
             
             return api.getGson().fromJson(sb.toString(), Configuration.class);
             
-        } catch (IOException | ProjectNotOpenException e) {
+        } catch (Exception e) {
             // Ignore configuration
             return new Configuration();
         }

@@ -3,8 +3,12 @@
     <property name="dir.buildfile" value="."/>
     <property name="dir.jarfile" value="./jar"/>
     <target name="create_jar">
-	<mkdir dir="bin" />
+        <mkdir dir="bin" />
         <mkdir dir="jar" />
+        <path id="classpath">
+            <fileset dir="${dir.buildfile}/lib" includes="**/*.jar" />
+        </path>
+        <javac srcdir="src" destdir="bin" classpathref="classpath" target="1.6" source="1.6" />
         <jar destfile="${dir.jarfile}/INGInious.jar">
             <manifest>
                 <attribute name="Class-Path" value="."/>
