@@ -41,13 +41,14 @@ public class FeedbackGUI extends Thread {
     /**
      * Initialize a new thread which waits for the feedback to be available
      * and display a new frame when it is.
-     * @param api Instance of the INGInious API
+     * @param apiUrl URL to the INGInious API
+     * @param sessionId Session ID 
      * @param course Course for which submission was made
      * @param task Task for which submission was made
      * @param submissionId Submission id of the submission feedback to display
      */
-    public FeedbackGUI(API api, Course course, Task task, String submissionId) {
-        this.api = api;
+    public FeedbackGUI(String apiUrl, String sessionId, Course course, Task task, String submissionId) {
+        this.api = new API(apiUrl, sessionId);
         this.course = course;
         this.task = task;
         this.submissionId = submissionId;
