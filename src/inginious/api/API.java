@@ -125,7 +125,7 @@ public class API {
         // Prepare post parameters
         String params = "auth_method_id=" + authMethod.getId();
         for(AuthInput input : authMethod.getInput())
-            params += "&" + input.getId() + "=" + input.getValue();
+            params += "&" + input.getId() + "=" + URLEncoder.encode(input.getValue(), "UTF-8");
 
         // Post data
         conn.setDoOutput(true);
