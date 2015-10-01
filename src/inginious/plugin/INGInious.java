@@ -60,14 +60,14 @@ public class INGInious extends Extension {
      * Returns the current version of the plugin
      */
     public String  getVersion () { 
-        return ("0.1");  
+        return this.getClass().getPackage().getImplementationVersion();
     }
 
     /**
      * Returns the name of the plugin
      */
     public String  getName () { 
-        return ("INGInious");  
+        return "INGInious";
     }
 
     /**

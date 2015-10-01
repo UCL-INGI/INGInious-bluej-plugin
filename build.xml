@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="create_jar" name="INGInious plugin jar">
+<project default="create_jar" name="INGInious BlueJ plugin">
     <property name="dir.buildfile" value="."/>
     <property name="dir.jarfile" value="./jar"/>
     <target name="create_jar">
@@ -8,11 +8,16 @@
         <path id="classpath">
             <fileset dir="${dir.buildfile}/lib" includes="**/*.jar" />
         </path>
+        <exec executable="git" outputproperty="version">
+            <arg value="describe"/>
+            <arg value="--tag"/>
+        </exec>
         <javac srcdir="src" destdir="bin" classpathref="classpath" target="1.6" source="1.6" />
         <jar destfile="${dir.jarfile}/INGInious.jar">
             <manifest>
                 <attribute name="Class-Path" value="."/>
                 <attribute name="Main-Class" value="inginious.plugin.INGInious"/>
+                <attribute name="Implementation-Version" value="${version}"/>
             </manifest>
             <fileset dir="${dir.buildfile}/bin"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/gson-2.3.1.jar"/>
