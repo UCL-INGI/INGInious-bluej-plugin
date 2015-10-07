@@ -72,7 +72,14 @@ public class FeedbackGUI extends Thread {
             html += "<h2>" + task.getName() + "</h2>";
             html += "<h3> Your grade : " + Math.round(sub.getGrade()) + " %</h3>";
             html += "<hr/>";
-            html += sub.getFeedback() + "</body></html>";
+            html += sub.getFeedback();
+            
+            int ind = 1;
+            for(String str : sub.getProblemFeedbacks().values()) {
+                html += "<h2> Feedback for problem " + ind + " :</h2>";
+				html += str;
+            }
+            html += "</body></html>";
             
             // Initialize a scroll pane with an editor pane whose content is set to produced html
             JScrollPane scrollPane = new JScrollPane(new JEditorPane("text/html", html));

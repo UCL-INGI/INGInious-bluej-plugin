@@ -89,6 +89,14 @@ public class Submission {
     }
 
     /**
+     * Returns the problems feedbacks
+     * @return Hashmap containing the feedbacks for the subproblems (keys are problem id)
+     */
+    public Map<String,String> getProblemFeedbacks() {
+        return problems_feedback;
+    }
+
+    /**
      * Returns the global result of the submission
      * @return String representing the global result (success, crash, ...)
      */
