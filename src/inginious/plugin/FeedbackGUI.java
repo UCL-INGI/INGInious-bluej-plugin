@@ -66,37 +66,44 @@ public class FeedbackGUI extends Thread {
                 sub = Submission.getFromAPI(api, course.getId(), task.getId(), submissionId);
             }
             
-            // Produce small HTML code to format feedback
-            String html = "<html><body style=\"font-family: sans-serif;\">";
-            html += "<h1>" + course.getName() + "</h1>";
-            html += "<h2>" + task.getName() + "</h2>";
-            html += "<h3> Your grade : " + Math.round(sub.getGrade()) + " %</h3>";
-            html += "<hr/>";
-            html += sub.getFeedback();
-            
-            int ind = 1;
-            for(String str : sub.getProblemFeedbacks().values()) {
-                html += "<h2> Feedback for problem " + ind + " :</h2>";
-				html += str;
+            // Check if no error happened
+            if(sub.getStatus().equals("error")) {
+                JOptionPane.showMessageDialog(null, "The grader encountered a problem. Log in for more details.", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
             }
-            html += "</body></html>";
-            
-            // Initialize a scroll pane with an editor pane whose content is set to produced html
-            JScrollPane scrollPane = new JScrollPane(new JEditorPane("text/html", html));
-            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-            
-            // Initialize a panel to stretch the editor to the border of the window
-            JPanel mainPanel = new JPanel();
-            mainPanel.setLayout(new BorderLayout());
-            mainPanel.add(scrollPane, BorderLayout.CENTER);
-            
-            // Initialize and open a new frame with the feedback
-            JFrame frame = new JFrame("Feedback for submission : " + sub.getId());
-            frame.add(mainPanel);
-            frame.setMinimumSize(new Dimension(500,300));
-            frame.setSize(500, 300);
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
+            else {
+                // Produce small HTML code to format feedback
+                String html = "<html><body style=\"font-family: sans-serif;\">";
+                html += "<h1>" + course.getName() + "</h1>";
+                html += "<h2>" + task.getName() + "</h2>";
+                html += "<h3> Your grade : " + Math.round(sub.getGrade()) + " %</h3>";
+                html += "<hr/>";
+                html += sub.getFeedback();
+                
+                int ind = 1;
+                for(String str : sub.getProblemFeedbacks().values()) {
+                    html += "<h2> Feedback for problem " + ind + " :</h2>";
+                    html += str;
+                }
+                html += "</body></html>";
+                
+                // Initialize a scroll pane with an editor pane whose content is set to produced html
+                JScrollPane scrollPane = new JScrollPane(new JEditorPane("text/html", html));
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                
+                // Initialize a panel to stretch the editor to the border of the window
+                JPanel mainPanel = new JPanel();
+                mainPanel.setLayout(new BorderLayout());
+                mainPanel.add(scrollPane, BorderLayout.CENTER);
+                
+                // Initialize and open a new frame with the feedback
+                JFrame frame = new JFrame("Feedback for submission : " + sub.getId());
+                frame.add(mainPanel);
+                frame.setMinimumSize(new Dimension(500,300));
+                frame.setSize(500, 300);
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
             
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Unhandled error\n" + e.getClass().getName() + " : " + e.getMessage(), 
