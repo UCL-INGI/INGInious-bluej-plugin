@@ -81,9 +81,9 @@ public class FeedbackGUI extends Thread {
                 html += sub.getFeedback();
                 
                 int ind = 1;
-                for(String str : sub.getProblemFeedbacks().values()) {
+                for(String[] strArr : sub.getProblemFeedbacks().values()) {
                     html += "<h2> Feedback for problem " + ind + " :</h2>";
-                    html += str;
+                    html += strArr[1];
                 }
                 html += "</body></html>";
                 

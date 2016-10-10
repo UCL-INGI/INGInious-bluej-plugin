@@ -34,7 +34,7 @@ public class Submission {
     private String feedback;
     private double grade;
     private String submitted_on;
-    private Map<String,String> problems_feedback;
+    private Map<String,String[]> problems_feedback;
     private String result;
 
     private Submission() {}
@@ -85,14 +85,23 @@ public class Submission {
      * @return String containing the feedback for the specified problem
      */
     public String getProblemFeedback(String problemId) {
-        return problems_feedback.get(problemId);
+        return problems_feedback.get(problemId)[1];
+    }
+
+    /**
+     * Returns the specific result for a given problem id
+     * @param problemId problem id
+     * @return String containing the result for the specified problem (success, crash, ...)
+     */
+    public String getProblemResult(String problemId) {
+        return problems_feedback.get(problemId)[0];
     }
 
     /**
      * Returns the problems feedbacks
      * @return Hashmap containing the feedbacks for the subproblems (keys are problem id)
      */
-    public Map<String,String> getProblemFeedbacks() {
+    public Map<String,String[]> getProblemFeedbacks() {
         return problems_feedback;
     }
 
